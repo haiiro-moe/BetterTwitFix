@@ -1,11 +1,11 @@
 {
     "config": {
-        "appname": "vxTwitter",
-        "color": "#1DA1F2",
+        "appname": "Gakkou Twitter Club",
+        "color": "#EC4899",
         "database": "[url to mongo database goes here]",
         "link_cache": "ram",
         "method": "hybrid",
-        "repo": "https://github.com/dylanpdx/BetterTwitFix",
+        "repo": "https://github.com/haiiro-moe/BetterTwitFix",
         "table": "[database table here]",
         "url": "https://vxtwitter.com",
         "combination_method": "local",
