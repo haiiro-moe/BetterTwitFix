@@ -72,6 +72,22 @@ I do not monitor any tweets processed by this server. Additionally, if you plan 
 ## How to host
 See [the following page](https://github.com/dylanpdx/BetterTwitFix/blob/main/hosting.md)
 
+## Nix / NixOS
+The repo ships a `flake.nix` (x86_64-linux and aarch64-linux). No global Python is needed.
+
+```sh
+nix develop                      # shell: python 3.12 + all dependencies, pytest, uwsgi (direnv: `.envrc` is `use flake`)
+nix develop -c python wsgi.py    # Flask dev server on :5000 (run from the repo root, it reads ./config.json)
+nix develop -c pytest --ignore=result   # tests; they make live Twitter requests and need real tokens
+nix run .                        # packaged app under uwsgi on http://0.0.0.0:5000
+nix build                        # ./result/bin/twitfix, see below
+```
+
+- The packaged `twitfix` launcher runs from your current directory, so `config.json` and `links.json` are read and written there (the Nix store is read-only). For serverless-style config use `RUNNING_SERVERLESS=1` and the `VXTWITTER_*` variables from [Config](#config).
+- Dependency versions come from the pinned nixpkgs channel (see `flake.lock`), not from the `==` pins in `requirements.txt`. Only `numerize`, `PyRTF3` and `XClientTransaction` are not in nixpkgs; the flake builds them from their PyPI wheels/sdists at the exact pinned versions with fixed hashes. Update the flake's inputs with `nix flake update`.
+- The dev shell defaults `VXTWITTER_WORKAROUND_TOKENS` to `dummy` so `import twitfix` works; export a real value before running tests against Twitter.
+- Pytest also scans a `result` symlink if present, so pass `--ignore=result` or build with `nix build -o /tmp/twitfix-result`.
+
 ## Config
 
 vxTwitter generates a config.json in its root directory the first time you run it, the options are:
