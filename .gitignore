@@ -15,3 +15,5 @@ build
 .vscode/
 *.bat
 .DS_Store
+result
+.direnv
